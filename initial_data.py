@@ -62,26 +62,3 @@ for i in range(len(symbols)):
 
 mydb.commit()
 
-
-# ###
-# import datetime
-# mydb = mysql.connector.connect(
-#     host = "localhost",
-#     user = username,
-#     passwd = password,
-#     database = "finance")
-# 
-# # A better way for getting Decimal class
-# class myconverter(mysql.connector.conversion.MySQLConverter):
-#     def _NEWDECIMAL_to_python(self, value, desc=None):
-#         return float(value)
-# 
-# mydb.set_converter_class(myconverter)
-# mycursor = mydb.cursor()
-# 
-# mycursor.execute("select * from stocks limit 10;")
-# myresult = mycursor.fetchall()
-# for x in myresult:
-#     print(x)
-
-
