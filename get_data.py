@@ -92,5 +92,51 @@ for i in range(len(symbols)):
     # Alphavantage doesn't want us doing too many calls too close in time
     time.sleep(15)
 
+# Remove duplicates
+mycursor.execute("select * from stocks order by symbol, marketdate desc limit 20")
+r = mycursor.fetchall()
+for line in r:
+    print(line)
+
+query = """
+    with cte (symbol, marketdate, rn)
+    as
+    (
+        select symbol, marketdate,
+        row_number() over(partition by symbol, marketdate
+            order by symbol, marketdate) as rn
+        from stocks
+    ) select * from cte order by symbol, marketdate desc limit 20
+    """
+
+query = """
+select a.symbol, b.symbol, a.marketdate, b.marketdate
+from stocks a
+join stocks b on a.symbol = b.symbol
+    and a.marketdate = b.marketdate
+where a.marketdate > "2019-02-01"
+order by a.marketdate desc
+limit 50;
+"""
+
+
+query = "alter ignore table stocks add unique
+
+mycursor.execute(query)
+r = mycursor.fetchall()
+for line in r:
+    print(line)
+
+query = """
+WITH CTE (Col1, Col2, Col3, DuplicateCount)
+AS
+(
+  SELECT Col1, Col2, Col3,
+  ROW_NUMBER() OVER(PARTITION BY Col1, Col2,
+       Col3 ORDER BY Col1) AS DuplicateCount
+  FROM MyTable
+) SELECT * from CTE Where DuplicateCount = 1
+"""
+
 mydb.commit()
 
