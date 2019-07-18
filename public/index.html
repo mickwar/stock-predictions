@@ -10,11 +10,19 @@
     <h1>Text</h1>
 
     <div id="userinput">
+    <form id="myForm" method="post" action="/">
     <table>
-        <tr><td>AlphaVantage API Key:</td><td><input type="text" id="apikey"></td></tr>
-        <tr><td>Stock symbol:</td><td><input type="text" id="symbol"></td></tr>
+        <tr>
+            <td>AlphaVantage API Key:</td>
+            <td><input type="text" id="apikey" name="apikey" /></td>
+        </tr>
+        <tr>
+            <td>Stock symbol:</td>
+            <td><input type="text" id="symbol" name="symbol" /></td>
+        </tr>
     </table>
-    <p>Collect data, train neural network, make predictions: <input type="button" id="req" value="GO"></p>
+    <p>Collect data, train model, make predictions: <input type="submit" id="doIt" value="GO"></p>
+    </form>
     </div>
 
 </body>
