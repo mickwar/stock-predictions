@@ -4,7 +4,8 @@
   "description": "https://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon --ignore env index.js"
   },
   "repository": {
     "type": "git",
