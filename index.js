@@ -3,6 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const spawn = require('child_process').spawn;
 
+var APIKEY = "";
+var SYMBOL = "";
 
 const server = http.createServer((request, response) => {
     // build file path
@@ -62,7 +64,8 @@ const server = http.createServer((request, response) => {
         });
 
     // handle button click
-    // TODO request seems to send on page re-load
+    // TODO request seems to send on page reload
+    // (this might be intentional behavior, to resend form submission on reload
     if (request.method === 'POST'){
         var data = '';
 
@@ -72,22 +75,26 @@ const server = http.createServer((request, response) => {
 
         request.on('end', function() {
             // parse the data
-            var APIKEY = data.substring(data.indexOf("=") + 1, data.indexOf("&"));
-            var SYMBOL = data.substring(data.lastIndexOf("=") + 1, data.length);
-            callPython(data);
+            APIKEY = data.substring(data.indexOf("=") + 1, data.indexOf("&"));
+            SYMBOL = data.substring(data.lastIndexOf("=") + 1, data.length);
+            callPython(APIKEY, SYMBOL);
             });
         }
 
     });
 
-callPython = function(input){
-    // virtual env?
-    // const pyProc = spawn('source env/bin/activate');
-    const pyProc = spawn('python', ['python/test.py']);
+callPython = function(APIKEY, SYMBOL){
+    // Provide default values of left blank
+    APIKEY = APIKEY === "" ? "default" : APIKEY;
+    SYMBOL = SYMBOL === "" ? "AMZN" : SYMBOL;
+
+    // Start the process which loads the virtual environment and
+    // executes the python script, passing the key and symbol as arguments
+    const pyProc = spawn('bash', ['run_python.sh', APIKEY, SYMBOL]);
+
     pyProc.stdout.on('data', (data) => {
         console.log(data.toString());
         });
-    console.log("function called");
     }
 
 
@@ -96,9 +103,3 @@ callPython = function(input){
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-//const endpoint = "https://www.alphavantage.co/query";
-//const params = ["function={}", "symbol={}", "outputsize={}", "datatype={}", "apikey={}"].join("&");
-//const call = endpoint + "?" + params.format("TIME_SERIES_DAILY_ADJUSTED",
-//    symbols[i], outputsize, "csv", APIKEY)
-
