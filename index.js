@@ -40,6 +40,7 @@ const server = http.createServer((request, response) => {
             break;
         }
 
+    // read the html file and then send to browser (i.e. load a page)
     fs.readFile(
         filePath,
         (err, content) => {
@@ -62,6 +63,7 @@ const server = http.createServer((request, response) => {
                 response.end(content);
                 }
         });
+
 
     // handle button click
     // TODO request seems to send on page reload
