@@ -3,6 +3,7 @@ import sys
 import numpy as np
 import requests
 from datetime import date
+from sklearn.linear_model import LinearRegression
 
 ### Parse arguments
 APIKEY = sys.argv[1]
@@ -60,8 +61,8 @@ x = np.flip(x, 0)
 # Get response (adjusted close)
 y = x[:,5]
 
-# Get test data (should be today's date)
-testx = x[-1, :]
+# Get data for prediction (should be today's date)
+predx = x[-1, :]
 
 # Offset by one day
 # The prediction is tomorrow's close
@@ -77,17 +78,29 @@ ymax = np.max(y, 0)
 
 tmpind = xmax - xmin != 0
 x = x[:, tmpind]
-testx = testx[tmpind]
+predx = predx[tmpind]
 xmin = xmin[tmpind]
 xmax = xmax[tmpind]
 
 x = (x - xmin) / (xmax - xmin)
-testx = (testx - xmin) / (xmax - xmin)
+predx = (predx - xmin) / (xmax - xmin)
 y = (y - ymin) / (ymax - ymin)
 
 
 ### Train a model
+reg = LinearRegression().fit(x, y)
+predy = reg.predict(predx.reshape(1, -1))
+
+# Prediction error
+stdev = np.sqrt(sum((reg.predict(x) - y)**2) / (len(y) - 2))
+
+# Prediction interval
+predyint = np.array([predy - 1.96 * stdev, predy, predy + 1.96 * stdev])
+predyint = predyint * (ymax - ymin) + ymin
 
 
+# Output back for node to pick up
+for p in predyint:
+    print(float(p))
 
 sys.stdout.flush()

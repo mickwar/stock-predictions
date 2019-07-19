@@ -3,8 +3,13 @@ const path = require('path');
 const fs = require('fs');
 const spawn = require('child_process').spawn;
 
+
 var APIKEY = "";
 var SYMBOL = "";
+
+var lower = "0.0";
+var mean  = "0.0";
+var upper = "0.0";
 
 const server = http.createServer((request, response) => {
     // build file path
@@ -94,8 +99,19 @@ callPython = function(APIKEY, SYMBOL){
     // executes the python script, passing the key and symbol as arguments
     const pyProc = spawn('bash', ['run_python.sh', APIKEY, SYMBOL]);
 
+    // Process the output
     pyProc.stdout.on('data', (data) => {
-        console.log(data.toString());
+        // data.toString();
+        let tmp = data.toString().split('\n');
+        lower = tmp[0];
+        mean = tmp[1];
+        upper = tmp[2];
+        // document.getElementById("predLower").innerText = lower;
+        // document.getElementById("predMean").innerText = mean;
+        // document.getElementById("predUpper").innerText = upper;
+        console.log(lower);
+        console.log(mean);
+        console.log(upper);
         });
     }
 

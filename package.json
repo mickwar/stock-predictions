@@ -19,5 +19,8 @@
   "homepage": "https://github.com/mickwar/stock-predictions#readme",
   "devDependencies": {
     "nodemon": "^1.19.1"
+  },
+  "dependencies": {
+    "jsdom": "^15.1.1"
   }
 }
